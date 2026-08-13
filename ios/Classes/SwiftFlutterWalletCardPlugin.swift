@@ -4,8 +4,15 @@ import UIKit
 
 public class SwiftFlutterWalletCardPlugin: NSObject, FlutterPlugin {
   private var viewController: UIViewController {
-    guard let controller = UIApplication.shared.keyWindow?.rootViewController else {
+    guard var controller = UIApplication.shared.keyWindow?.rootViewController else {
       fatalError("Unable to get root view controller")
+    }
+    // Present from the top-most presented controller: when the Flutter view
+    // is itself presented modally (e.g. embedded as an SDK inside a host
+    // app), presenting from the root fails silently because the root is
+    // already presenting.
+    while let presented = controller.presentedViewController {
+      controller = presented
     }
     return controller;
   }

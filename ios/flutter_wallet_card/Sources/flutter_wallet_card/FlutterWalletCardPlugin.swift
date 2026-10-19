@@ -4,6 +4,7 @@ import UIKit
 
 public class FlutterWalletCardPlugin: NSObject, FlutterPlugin {
   private var viewController: UIViewController {
+    let rootController: UIViewController
     if #available(iOS 15.0, *) {
       guard
         let scene = UIApplication.shared.connectedScenes
@@ -13,13 +14,20 @@ public class FlutterWalletCardPlugin: NSObject, FlutterPlugin {
       else {
         fatalError("Unable to get root view controller")
       }
-      return controller
+      rootController = controller
     } else {
       guard let controller = UIApplication.shared.keyWindow?.rootViewController else {
         fatalError("Unable to get root view controller")
       }
-      return controller
+      rootController = controller
     }
+    // The Flutter view may itself be presented modally in an SDK host.
+    // Present the Add Pass sheet above that view rather than from its root.
+    var controller = rootController
+    while let presented = controller.presentedViewController {
+      controller = presented
+    }
+    return controller
   }
   private var addPassesFlutterResult: FlutterResult?
   private var initialPassCount: Int?

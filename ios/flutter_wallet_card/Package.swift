@@ -13,16 +13,12 @@ let package = Package(
     ],
     dependencies: [
         .package(name: "FlutterFramework", path: "../FlutterFramework"),
-        .package(
-            url: "https://github.com/krzyzanowskim/OpenSSL-Package.git",
-            .upToNextMajor(from: "3.6.1")),
     ],
     targets: [
         .target(
             name: "flutter_wallet_card",
             dependencies: [
                 .product(name: "FlutterFramework", package: "FlutterFramework"),
-                .product(name: "OpenSSL", package: "OpenSSL-Package"),
             ],
             resources: []
         )
